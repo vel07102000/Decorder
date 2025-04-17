@@ -1,0 +1,79 @@
+function myApp()
+    % Singleton check
+    appTag = 'MySingletonGUI';
+    existingFig = findall(0, 'Type', 'figure', 'Tag', appTag);
+
+    if ~isempty(existingFig)
+        figure(existingFig);
+        return;
+    end
+
+    % Main figure
+    hFig = figure('Name', 'Multi-Tab GUI', ...
+        'NumberTitle', 'off', ...
+        'MenuBar', 'none', ...
+        'ToolBar', 'none', ...
+        'Tag', appTag, ...
+        'Position', [500, 300, 600, 400]);
+
+    % Create tab group
+    hTabGroup = uitabgroup('Parent', hFig);
+
+    % ===== Tab 1: Login & Table =====
+    tab1 = uitab('Parent', hTabGroup, 'Title', 'Decoder');
+
+    % Username label
+    uicontrol('Style', 'text', 'Parent', tab1, ...
+        'String', 'Enter Username:', ...
+        'Position', [30 330 100 20], ...
+        'HorizontalAlignment', 'left', ...
+        'FontSize', 10);
+
+    % Username input
+    hUsername = uicontrol('Style', 'edit', 'Parent', tab1, ...
+        'Position', [140 330 150 25], ...
+        'FontSize', 10);
+
+    % Load button
+    hLoadBtn = uicontrol('Style', 'pushbutton', 'Parent', tab1, ...
+        'String', 'Load Data', ...
+        'Position', [310 330 100 25], ...
+        'FontSize', 10, ...
+        'Callback', @(src, event) onLoadButtonClick(hUsername, hTable));
+
+    % Data table
+    hTable = uitable('Parent', tab1, ...
+        'Position', [30 30 520 280], ...
+        'Data', {}, ...
+        'ColumnName', {'ID', 'Name', 'Value'}, ...
+        'ColumnWidth', {50, 200, 100}, ...
+        'FontSize', 10);
+
+    % ===== Tab 2: Placeholder for Later =====
+    tab2 = uitab('Parent', hTabGroup, 'Title', 'Second Tab');
+
+    % Placeholder label
+    uicontrol('Style', 'text', 'Parent', tab2, ...
+        'String', 'This tab is under construction. More to come!', ...
+        'Position', [150 180 300 40], ...
+        'FontSize', 12, ...
+        'ForegroundColor', [0.4 0.4 0.4]);
+end
+
+function onLoadButtonClick(hUsername, hTable)
+    username = get(hUsername, 'String');
+
+    if isempty(username)
+        warndlg('Please enter a username.', 'Missing Input');
+        return;
+    end
+
+    % Simulated output based on input
+    data = {
+        1, [username '_entry1'], rand();
+        2, [username '_entry2'], rand();
+        3, [username '_entry3'], rand()
+    };
+
+    set(hTable, 'Data', data);
+end
