@@ -2,136 +2,231 @@ function myApp()
     % Singleton check
     appTag = 'MySingletonGUI';
     existingFig = findall(0, 'Type', 'figure', 'Tag', appTag);
-
     if ~isempty(existingFig)
         figure(existingFig);
         return;
     end
 
     % Main figure
-    hFig = figure('Name', 'Multi-Tab GUI', ...
+    hFig = figure('Name', 'Part Decoder', ...
         'NumberTitle', 'off', ...
         'MenuBar', 'none', ...
         'ToolBar', 'none', ...
         'Tag', appTag, ...
-        'Position', [500, 300, 600, 500]);
+        'Position', [500, 300, 640, 520], ...
+        'Resize', 'off', ...
+        'Color', [0.95 0.95 0.95]);
 
     % Create tab group
     hTabGroup = uitabgroup('Parent', hFig);
-
-    % ===== Tab 1: Decoder =====
     tab1 = uitab('Parent', hTabGroup, 'Title', 'Decoder');
 
-    % File path label
+    % UI Layout
+    labelFont = 10;
+    inputFont = 10;
+    leftX = 20;
+    width1 = 80;
+    width2 = 300;
+    height = 25;
+    spacing = 10;
+    y = 440;
+
+    % JSON File Label
     uicontrol('Style', 'text', 'Parent', tab1, ...
-        'String', 'File Path:', ...
-        'Position', [10 430 100 20], ...
+        'String', 'Excel File:', ...
+        'Position', [leftX, y, width1, height], ...
         'HorizontalAlignment', 'left', ...
-        'FontSize', 10);
+        'FontSize', labelFont);
 
-    % File path input
+    % Excel File Path
     hFilePath = uicontrol('Style', 'edit', 'Parent', tab1, ...
-        'Position', [70 430 250 25], ...
-        'FontSize', 10);
+        'Position', [leftX + width1 + spacing, y, width2, height], ...
+        'FontSize', inputFont);
 
-    % Browse button for file path
-    hBrowseBtn = uicontrol('Style', 'pushbutton', 'Parent', tab1, ...
+    % Browse button
+    uicontrol('Style', 'pushbutton', 'Parent', tab1, ...
         'String', 'Browse', ...
-        'Position', [320 430 100 25], ...
-        'FontSize', 10, ...
-        'Callback', @(src, event) browseFile(hFilePath));
+        'Position', [leftX + width1 + width2 + 2 * spacing, y, 80, height], ...
+        'FontSize', inputFont, ...
+        'Callback', @(~, ~) browseExcelFile(hFilePath));
 
-    % Part No. label
+    y = y - height - spacing;
+
+    % Part Number Label
     uicontrol('Style', 'text', 'Parent', tab1, ...
         'String', 'Part No:', ...
-        'Position', [10 390 100 20], ...
+        'Position', [leftX, y, width1, height], ...
         'HorizontalAlignment', 'left', ...
-        'FontSize', 10);
+        'FontSize', labelFont);
 
-    % Part No input
+    % Part Number Input
     hPartNo = uicontrol('Style', 'edit', 'Parent', tab1, ...
-        'Position', [70 390 250 25], ...
-        'FontSize', 10);
+        'Position', [leftX + width1 + spacing, y, width2, height], ...
+        'FontSize', inputFont, ...
+        'Tag', 'PartInput');
 
     % Decode button
     hLoadBtn = uicontrol('Style', 'pushbutton', 'Parent', tab1, ...
         'String', 'Decode', ...
-        'Position', [320 390 100 25], ...
-        'FontSize', 10);
+        'Position', [leftX + width1 + width2 + 2 * spacing, y, 80, height], ...
+        'FontSize', inputFont);
 
     % Clear button
     hClearBtn = uicontrol('Style', 'pushbutton', 'Parent', tab1, ...
         'String', 'Clear', ...
-        'Position', [420 390 100 25], ...
-        'FontSize', 10);
+        'Position', [leftX + width1 + width2 + 2 * spacing + 90, y, 80, height], ...
+        'FontSize', inputFont);
 
-    % Data table
+    % Decode Details button (New button above the table)
+    % Decode Details button (moved next to Save)
+    hDecodeDetailsBtn = uicontrol('Style', 'pushbutton', 'Parent', tab1, ...
+        'String', 'DD', ...
+        'Position', [leftX + width1 + width2 + 2 * spacing , 370, 80, height], ...
+        'FontSize', inputFont, ...
+        'Callback', @(~, ~) displayDecodeDetails(hPartNo, hFilePath));
+
+
+    y = y - height - spacing;
+    
+        % Data table (must be defined before referencing it)
     hTable = uitable('Parent', tab1, ...
-        'Position', [30 50 520 320], ...  % Larger table
+        'Position', [leftX, 40, 580, 330], ...
         'Data', {}, ...
-        'ColumnName', {'ID', 'Name', 'Value'}, ...
-        'ColumnWidth', {50, 200, 100}, ...
-        'FontSize', 10);
+        'ColumnWidth', {150, 150,60, 60,60,60}, ...
+        'FontSize', 10, ...
+        'RowStriping', 'on');
 
-    % Assign callbacks
-    set(hLoadBtn, 'Callback', @(src, event) loadData(hPartNo, hFilePath, hTable));
-    set(hClearBtn, 'Callback', @(src, event) clearInputs(hPartNo, hFilePath, hTable));
+    % Save button (now hTable is already defined)
+    hSaveBtn = uicontrol('Style', 'pushbutton', 'Parent', tab1, ...
+        'String', 'Save', ...
+        'Position', [leftX + width1 + width2 + 2 * spacing + 90, y, 80, height], ...
+        'FontSize', inputFont, ...
+        'Callback', @(~, ~) saveTableData(hTable));
 
-    % ===== Tab 2: Placeholder =====
-    tab2 = uitab('Parent', hTabGroup, 'Title', 'Report Generation');
+    % Callbacks
+    set(hLoadBtn, 'Callback', @(~, ~) loadExcelData(hPartNo, hFilePath, hTable));
+    set(hClearBtn, 'Callback', @(~, ~) clearInputs(hPartNo, hFilePath, hTable));
 
-    uicontrol('Style', 'text', 'Parent', tab2, ...
-        'String', 'This tab is under construction. More to come!', ...
-        'Position', [150 180 300 40], ...
-        'FontSize', 12, ...
-        'ForegroundColor', [0.4 0.4 0.4]);
+    % Focus cursor on PartNo box at start
+    uicontrol(hPartNo);
 end
 
-% Callback for browsing file
-function browseFile(hFilePath)
-    % Open file dialog to choose file
-    [fileName, filePath] = uigetfile('*.*', 'Select a File');
-    if fileName ~= 0
-        fullPath = fullfile(filePath, fileName);
-        set(hFilePath, 'String', fullPath);
-    end
-end
-
-% Callback for loading data
-function loadData(hPartNo, hFilePath, hTable)
-    partNo = get(hPartNo, 'String');
-    filePath = get(hFilePath, 'String');
-
-    if isempty(partNo) || isempty(filePath)
-        warndlg('Please provide Part No and File Path.', 'Missing Input');
+% --- Browse Excel File ---
+function browseExcelFile(hFilePath)
+    [file, path] = uigetfile({'*.xlsx;*.xls', 'Excel Files (*.xlsx, *.xls)'}, 'Select Excel File');
+    if isequal(file, 0)
         return;
     end
-
-    % Simulated loading of data from the file
-    try
-        % Read from the file (you can modify this as per your file format)
-        fileData = readtable(filePath); % assuming CSV or other tabular format
-        data = table2cell(fileData);
-    catch
-        warndlg('Error reading the file. Please check the file format.', 'File Error');
-        return;
-    end
-
-    % Insert the partNo into the table
-    for i = 1:size(data, 1)
-        data{i, 2} = [partNo '_' num2str(i)]; % Adding Part No info to Name column
-    end
-
-    % Update table
-    set(hTable, 'Data', data);
+    fullFilePath = fullfile(path, file);
+    set(hFilePath, 'String', fullFilePath);
 end
 
-% Callback for clearing inputs and table
+% --- Clear Inputs ---
 function clearInputs(hPartNo, hFilePath, hTable)
-    % Clear the part number and file path fields
     set(hPartNo, 'String', '');
     set(hFilePath, 'String', '');
-
-    % Clear the table
     set(hTable, 'Data', {});
 end
+
+% --- Display Decode Details (Callback for Decode Details button) ---
+function displayDecodeDetails(hPartNo, hFilePath)
+    partNo = strtrim(get(hPartNo, 'String'));
+    excelFile = strtrim(get(hFilePath, 'String'));
+
+    if isempty(partNo) || isempty(excelFile)
+        warndlg('Please enter a part number and select an Excel file.', 'Missing Input');
+        return;
+    end
+
+    try
+        partDetails = decodepart_excel2(excelFile, partNo);
+        resultTable = {};
+        if isfield(partDetails, 'Product_Family_info') && ~isempty(partDetails.Product_Family_info)
+            productFamilyData = partDetails.Product_Family_info{:,:};
+            productNumber = productFamilyData{1, 1};
+            Frequency_range = productFamilyData{1, 2};
+            trimMode = productFamilyData{1, 3};
+            resultTable = [resultTable; {'Product Number', productNumber}];
+            resultTable = [resultTable; {'Frq Range', Frequency_range}];
+            resultTable = [resultTable; {'Trim Mode', trimMode}];
+        else
+            resultTable = [resultTable; {'Product Family', 'No match found'}];
+        end
+        if isfield(partDetails, 'frequency_hz') && ~isnan(partDetails.frequency_hz)
+            frequencyRange = sprintf('%.2f MHz', partDetails.frequency_hz / 1e6);
+            resultTable = [resultTable; {'Output frq', frequencyRange}];
+        else
+            resultTable = [resultTable; {'Frequency Range', 'No data available'}];
+        end
+        detailFig = figure('Name', 'Decoded Part Details', 'NumberTitle', 'off', 'Position', [600, 300, 600, 400]);
+        uitable('Parent', detailFig, ...
+                'Position', [20, 50, 560, 300], ...
+                'Data', resultTable, ...
+                'ColumnName', {'Name', 'Value'}, ...
+                'ColumnWidth', {200, 200}, ...
+                'FontSize', 10, ...
+                'RowStriping', 'on');
+
+    catch ME
+        warndlg(['Error decoding part: ' ME.message], 'Decoding Error');
+    end
+end
+
+function loadExcelData(hPartNo, hFilePath, hTable)
+    % Get user inputs
+    partNo = strtrim(get(hPartNo, 'String'));
+    excelFile = strtrim(get(hFilePath, 'String'));
+
+    if isempty(partNo) || isempty(excelFile)
+        warndlg('Please enter a part number and select an Excel file.', 'Missing Input');
+        return;
+    end
+
+    try
+        % Decode
+        partDetails = decodepart_excel2(excelFile, partNo);
+        resultTable = {};
+
+        % Check if Specs_sheet_info is available
+        if isfield(partDetails, 'Specs_sheet_info') && ~isempty(partDetails.Specs_sheet_info)
+            specsTable = partDetails.Specs_sheet_info;
+
+            % Convert the table to a cell array to prevent type mismatch
+            specsCell = table2cell(specsTable);
+
+            % Optional: Extract and use original column names as headers
+            colNames = specsTable.Properties.VariableNames;
+
+            % Combine headers and data
+            resultTable = [colNames; specsCell];
+        else
+            resultTable = {'Specs Info', 'No data found'};
+        end
+
+        % Update the UI table
+        set(hTable, 'Data', resultTable);
+        set(hTable, 'Data', resultTable);
+        set(hTable, 'UserData', resultTable);  % <--- Save for later use
+    
+
+    catch ME
+        warndlg(['Error decoding part: ' ME.message], 'Decoding Error');
+    end
+end
+
+function saveTableData(hTable)
+    % Retrieve stored data
+    tableData = get(hTable, 'UserData');
+    
+    if isempty(tableData)
+        warndlg('No data to store.', 'Warning');
+        return;
+    end
+
+    % Store data in a variable in the base workspace
+    assignin('base', 'savedDecoderData', tableData);  % Accessible in MATLAB base workspace
+    msgbox('Data stored in variable: savedDecoderData', 'Stored Successfully');
+end
+
+
+

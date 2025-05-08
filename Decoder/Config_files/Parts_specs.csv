@@ -1,0 +1,4 @@
+PartNumber,SpecName,  Min,Typ,Max
+SIT5134,   Duty Cycle,45,50,55
+SIT5134,   Jitter,    0.3,0.5,0.7
+SIT5135,   Phase Noise,-130,-125,-120

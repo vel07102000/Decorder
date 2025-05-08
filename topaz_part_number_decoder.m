@@ -42,9 +42,9 @@ decoded_part_num.product_family = part_num( 1:7 );
 %     {'SS_VCO2.5G', 'CP_fracN', 'CP_fracN', 'CP_fracN', 'SS_VCO5G'} );
 product = {'SIT5134', 'SIT5135', 'SIT5136', 'SIT5137', 'SIT5334', 'SIT5335', 'SIT5336', 'SIT5337', 'SIT7343', 'SIT7344' ,'SIT7341'};
 decoded_part_num.StabilityGrade = part_num( 12:12 );
-																																				  
-freq_range = {'1-60MHz', '60-105MHz', '1-60MHz', '60-105MHz', '1-60MHz', '60-105MHz', '1-60MHz', '60-105MHz', '1-105MHz', '1-105MHz' ,'1-100MHz'};
-trim_mode = {'LP', 'LP', 'LJ', 'LJ', 'LP', 'LP', 'LJ', 'LJ', 'LP', 'LJ' , 'LP'};
+					freq_range = {'1-60MHz', '60-105MHz', '1-60MHz', '60-105MHz', '1-60MHz', '60-105MHz', '1-60MHz', '60-105MHz', '1-105MHz', '1-105MHz' ,'1-100MHz'};
+trim_mode = {'LP', 'LP', 'LJ', 'LJ', 'LP', 'LP', 'LJ', 'LJ', 'LP', 'LJ' , 'LP'};																															  
+
 % cmos = {};
 % if ~ismember( part_num( 1:7 ), keys( map_product2cmos ))
 %     error('Invalid part number!');

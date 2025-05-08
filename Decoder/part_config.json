@@ -1,0 +1,74 @@
+{
+  "product_family": {
+    "SIT5134": { "freq_range": "1-60MHz", "trim_mode": "LP" },
+    "SIT5135": { "freq_range": "60-105MHz", "trim_mode": "LP" },
+    "SIT5136": { "freq_range": "1-60MHz", "trim_mode": "LJ" },
+    "SIT5137": { "freq_range": "60-105MHz", "trim_mode": "LJ" },
+    "SIT5334": { "freq_range": "1-60MHz", "trim_mode": "LP" },
+    "SIT5335": { "freq_range": "60-105MHz", "trim_mode": "LP" },
+    "SIT5336": { "freq_range": "1-60MHz", "trim_mode": "LJ" },
+    "SIT5337": { "freq_range": "60-105MHz", "trim_mode": "LJ" },
+    "SIT7343": { "freq_range": "1-105MHz", "trim_mode": "LP" },
+    "SIT7344": { "freq_range": "1-105MHz", "trim_mode": "LJ" },
+    "SIT7341": { "freq_range": "1-100MHz", "trim_mode": "LP" }
+  },
+  "temperature_range": {
+    "C": [-20, 70],
+    "I": [-40, 85],
+    "B": [-40, 95],
+    "E": [-40, 105],
+    "A": [-40, 125],
+    "M": [-55, 125]
+  },
+  "output_waveform": {
+    "-": { "output_waveform": "LVCMOS", "outdrv": "LVCMOS" },
+    "C": { "output_waveform": "CSINE", "outdrv": "CSINE" },
+    "J": { "output_waveform": "Regulated LVCMOS, 1.0V typ", "outdrv": "LVCMOS" },
+    "H": { "output_waveform": "Regulated LVCMOS, 1.5V typ", "outdrv": "LVCMOS" }
+  },
+  "package_size": {
+    "F": "5032"
+  },
+  "frequency_stability_ppm": {
+    "K": 0.5,
+    "A": 1.0,
+    "D": 2.5,
+    "Q": 0.1,
+    "P": 0.2
+  },
+  "supply_voltage": {
+    "18": { "vdd_nom": 1.8, "vdd_min": 1.7, "vdd_max": 1.9 },
+    "30": { "vdd_nom": 3.0, "vdd_min": 2.7, "vdd_max": 3.3 },
+    "33": { "vdd_nom": 3.3, "vdd_min": 2.97, "vdd_max": 3.63 }
+  },
+  "prog_pin_feature": {
+    "N": "NF",
+    "E": "Pin 1 - OE",
+    "K": "Pin 1 - OE",
+    "L": "NF Software OE Control, Output Default OFF",
+    "M": "NF Software OE Control, Output Default ON"
+  },
+  "pin3_feature": {
+    "L": { "feature": "LO Lock Output", "lo_lock": "lock_pad", "trim": "TCXO", "i2c": 0 },
+    "N": { "feature": "NF", "lo_lock": "default", "trim": "TCXO", "i2c": 0 },
+    "H": { "feature": "200ppm", "lo_lock": "lock_pad", "trim": "DCTCXO", "i2c": 1 },
+    "Y": { "feature": "800ppm", "lo_lock": "lock_pad", "trim": "DCTCXO", "i2c": 1 },
+    "Z": { "feature": "1600ppm", "lo_lock": "lock_pad", "trim": "DCTCXO", "i2c": 1 },
+    "T": { "feature": "200ppm", "lo_lock": "lock_pad", "trim": "DCTCXO", "i2c": 1 }
+  },
+  "i2c_mode": {
+    "8": "A0 Pin is NC",
+    "9": "A0 Pin is NC",
+    "A": "A0 Pin is NC",
+    "B": "A0 Pin is NC",
+    "C": "A0 Pin is NC",
+    "D": "A0 Pin is NC",
+    "E": "A0 Pin is NC",
+    "F": "A0 Pin is NC",
+    "G": "Controlled by A0 Pin"
+  },
+  "sensitivity": {
+    "-": "-",
+    "A": "Low g-Sensitivity, 0.1 ppb/g"
+  }
+}

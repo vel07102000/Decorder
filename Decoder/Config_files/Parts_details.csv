@@ -1,0 +1,3 @@
+PartNumber,FreqRange,TrimMode
+SIT5134,1-60MHz,LP
+SIT5135,10-80MHz,HP
